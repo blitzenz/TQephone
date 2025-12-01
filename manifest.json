@@ -1,6 +1,6 @@
 {
-  "name": "兔k330组合版EPhone",
-  "short_name": "兔k330组合版EPhone",
+  "name": "QEPhone",
+  "short_name": "QEPhone",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -18,4 +18,3 @@
     }
   ]
 }
-
