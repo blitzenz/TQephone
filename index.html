@@ -1,41 +1,757 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>TQephone 三合一</title>
-
-  <!-- 直接用原作者的 manifest，完美安装、无底栏、图标正确 -->
-  <link rel="manifest" href="https://kittykitty0v0.github.io/TUKI330/manifest.json">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="theme-color" content="#f0f2f5">
-
-  <style>
-    body,html{margin:0;padding:0;height:100%;overflow:hidden;background:#fdfbf7}
-    iframe{width:100%;height:100%;border:none}
-  </style>
-</head>
-<body>
-
-  <!-- 默认显示原版磁带机（已经自带 330 + 兔K）-->
-  <iframe src="https://kittykitty0v0.github.io/TUKI330/"></iframe>
-
-  <!-- 偷偷加一个章鱼机入口：点第三个磁带卷轴（右边那个）就进章鱼机 -->
-  <script>
-    // 监听所有点击事件
-    document.addEventListener('click', function(e) {
-      // 如果点击区域在右边 30% 的屏幕（就是右边那个磁带卷轴的位置）
-      if (e.clientX > window.innerWidth * 0.7) {
-        document.querySelector('iframe').src = 'https://vauid.github.io/bbbbUwU/';
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0, user-scalable=yes" />
+    <title>TQephone 三合一</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="apple-touch-icon" href="https://i.postimg.cc/Fz25WLbr/7D99384EE38C42D2BA98F53E4582FEA8.jpg" />
+    <!-- 用原 TUKI330 manifest，确保手机全屏无底栏 -->
+    <link rel="manifest" href="https://kittykitty0v0.github.io/TUKI330/manifest.json" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="TQephone" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/Fz25WLbr/7D99384EE38C42D2BA98F53E4582FEA8.jpg" />
+    <meta name="theme-color" content="#f0f2f5" />
+    <style>
+      /* 原版核心配色和样式（从 TUKI330 复制） */
+      :root {
+        --bg-color: #fdfbf7; /* 暖米白 */
+        --glass-base: rgba(255, 253, 240, 0.65); /* 奶油底色玻璃 */
+        --border-color: #efe6d5; /* 柔和的边框色 */
+        --accent-gold: #e6ceac; /* 复古金 */
+        --text-brown: #8d6e63; /* 焦糖棕色字 */
+        --text-deep: #5d4037; /* 深咖啡色字 */
+        --shadow-warm: 0 15px 30px rgba(210, 180, 140, 0.25); /* 暖棕色投影 */
+        --font-main: 'Courier New', Courier, monospace; /* 复古打字机字体 */
       }
-      // 如果点击区域在左边 30%（左边卷轴），就切回原版
-      else if (e.clientX < window.innerWidth * 0.3) {
-        document.querySelector('iframe').src = 'https://kittykitty0v0.github.io/TUKI330/';
+      html { height: 100%; -webkit-text-size-adjust: 100%; }
+      body {
+        margin: 0;
+        font-family: var(--font-main);
+        font-weight: bold;
+        height: 100%;
+        overflow: hidden;
+        background-color: var(--bg-color);
+        /* 原版背景：极淡的复古格子 */
+        background-image: linear-gradient(rgba(230, 206, 172, 0.2) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(230, 206, 172, 0.2) 1px, transparent 1px);
+        background-size: 40px 40px;
+        color: var(--text-brown);
       }
-    });
-  </script>
-
-</body>
+      #phone-screen {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;
+      }
+      .screen {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        transition: 0.3s;
+      }
+      #home-screen {
+        padding-top: calc(30px + env(safe-area-inset-top));
+        padding-bottom: 20px;
+        box-sizing: border-box;
+        z-index: 10;
+      }
+      #home-screen-pages-container {
+        flex-grow: 1;
+        width: 100%;
+        height: 100%;
+        position: relative;
+      }
+      #home-screen-pages {
+        width: 100%;
+        height: 100%;
+        display: flex;
+      }
+      .home-screen-page {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      #main-content-area {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      /* 原版播放器主体：精致的奶油方糖 */
+      #desktop-layout {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding: 0 15px;
+        box-sizing: border-box;
+      }
+      #desktop-app-container {
+        background: linear-gradient(to bottom, #fdfbf7 0%, #f4eadd 100%);
+        border: 1px solid #e0d0b8;
+        border-radius: 20px;
+        padding: 50px 35px 60px 35px;
+        display: flex;
+        gap: 35px; /* 三个卷轴间距 */
+        position: relative;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), inset 0 -3px 5px rgba(0, 0, 0, 0.05),
+          0 15px 35px rgba(141, 110, 99, 0.25), 0 5px 10px rgba(0, 0, 0, 0.05);
+        align-items: center;
+        justify-content: center;
+        min-width: 400px; /* 拉宽容纳三个卷轴 */
+      }
+      /* 原版顶部铭牌 */
+      #desktop-app-container::before {
+        content: 'TQEPHONE MIX';
+        position: absolute;
+        top: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 11px;
+        font-family: Helvetica, Arial, sans-serif;
+        color: #a1887f;
+        background: linear-gradient(to bottom, #fffcf5, #f1e9d2);
+        padding: 4px 16px;
+        border-radius: 4px;
+        letter-spacing: 2px;
+        font-weight: 900;
+        border: 1px solid #d7ccc8;
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05), 0 1px 0 #fff;
+        z-index: 10;
+      }
+      /* 原版螺丝钉 */
+      .screw {
+        position: absolute;
+        width: 9px;
+        height: 9px;
+        background: linear-gradient(135deg, #e6ceac, #bf9e74);
+        border-radius: 50%;
+        box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 0.8), 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+      .screw::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 5px;
+        height: 1px;
+        background: rgba(93, 64, 55, 0.3);
+      }
+      .screw.tl { top: 12px; left: 12px; }
+      .screw.tr { top: 12px; right: 12px; }
+      .screw.bl { bottom: 12px; left: 12px; }
+      .screw.br { bottom: 12px; right: 12px; }
+      .tape-window-bg {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 360px; /* 拉宽容纳三个卷轴 */
+        height: 90px;
+        background: #fffdf5;
+        border: 2px solid #e6ceac;
+        border-radius: 35px;
+        z-index: 0;
+        background-image: repeating-linear-gradient(transparent, transparent 19px, #f2e6d9 20px);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+      .tape-bottom-deco {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 340px;
+        height: 35px;
+        background: #f0e6d2;
+        clip-path: polygon(10% 0%, 90% 0%, 100% 100%, 0% 100%);
+        border-top: 1px solid #e0d0b8;
+        z-index: 5;
+      }
+      .tape-holes {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 180px; /* 拉宽 */
+        height: 12px;
+        display: flex;
+        justify-content: space-between;
+      }
+      .tape-holes::before, .tape-holes::after {
+        content: '';
+        width: 12px;
+        height: 12px;
+        background: #5d4037;
+        border-radius: 50%;
+        box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.3);
+      }
+      /* 原版 + 新增卷轴动画 */
+      @keyframes reel-spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+      .icon-bg-desktop {
+        width: 76px;
+        height: 76px;
+        border-radius: 50%;
+        background: #3e2723;
+        border: 4px dashed #d7ccc8;
+        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5), 0 2px 5px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        transition: transform 0.3s;
+        position: relative;
+      }
+      .icon-bg-desktop img {
+        width: 86%;
+        height: 86%;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        animation: reel-spin 10s linear infinite;
+        opacity: 0.95;
+      }
+      .icon-bg-desktop::after {
+        content: '';
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        background: #fff;
+        border-radius: 50%;
+        z-index: 5;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+      }
+      .desktop-app-icon {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        width: 85px;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .desktop-app-icon .label {
+        font-size: 12px;
+        color: var(--text-deep);
+        background: #fffdf0;
+        padding: 3px 8px;
+        border: 1px solid #efe6d5;
+        border-radius: 2px;
+        box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.05);
+        font-weight: bold;
+        transform: rotate(-2deg);
+      }
+      .desktop-app-icon:nth-child(2) .label { transform: rotate(1deg); }
+      .desktop-app-icon:nth-child(3) .label { transform: rotate(2deg); } /* 章鱼机标签微歪 */
+      .desktop-app-icon:active .icon-bg-desktop { transform: scale(0.92); }
+      /* 原版 App 窗口（全屏 iframe） */
+      .app-window {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: #fff;
+        z-index: 50;
+        display: none;
+        flex-direction: column;
+        opacity: 0;
+        transform: scale(0.95);
+        transition: 0.3s;
+      }
+      .app-window.active {
+        display: flex;
+        opacity: 1;
+        transform: scale(1);
+      }
+      .app-iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        background: #fff;
+      }
+      /* 原版 FAB 悬浮按钮（右下角，不丑） */
+      #fab-container {
+        position: fixed;
+        bottom: 50px;
+        right: 25px;
+        z-index: 1000;
+        width: 64px;
+        height: 64px;
+      }
+      #fab-main {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background-color: #eecfa1;
+        background-image: repeating-radial-gradient(#eecfa1 0, #eecfa1 2px, #e0b878 3px, #eecfa1 4px);
+        box-shadow: 0 0 0 3px #fff, 0 6px 15px rgba(251, 192, 45, 0.3);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: 0.4s;
+        position: relative;
+      }
+      #fab-main::before {
+        content: '';
+        position: absolute;
+        width: 26px;
+        height: 26px;
+        background: #fff8e1;
+        border-radius: 50%;
+        z-index: 1;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+      #fab-main::after {
+        content: '';
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        background: var(--text-deep);
+        border-radius: 50%;
+        z-index: 2;
+      }
+      #fab-main svg {
+        width: 18px;
+        height: 18px;
+        fill: var(--text-deep);
+        z-index: 3;
+        position: relative;
+        transition: 0.3s;
+      }
+      #fab-main:active { transform: rotate(15deg) scale(0.95); }
+      #fab-main.expanded { transform: rotate(90deg); background: #fff; background-image: none; }
+      #fab-main.expanded::before, #fab-main.expanded::after { opacity: 0; }
+      .fab-actions {
+        position: absolute;
+        bottom: 80px;
+        right: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 12px;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(15px);
+        transition: 0.3s;
+        pointer-events: none;
+        width: max-content;
+      }
+      #fab-container.menu-open .fab-actions {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+      .fab-mini-btn {
+        width: 44px;
+        height: 44px;
+        background: #fff;
+        border-radius: 50%;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid #f0f0f0;
+        overflow: hidden;
+      }
+      .fab-mini-btn img { width: 100%; height: 100%; object-fit: cover; }
+      .fab-mini-btn svg { width: 20px; height: 20px; fill: var(--text-deep); }
+      .fab-label {
+        background: #fff;
+        color: var(--text-deep);
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+        margin-right: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        font-weight: bold;
+      }
+      /* 隐身模式 */
+      #fab-container.ghost-mode { opacity: 0; pointer-events: none; }
+      #fab-container.ghost-mode .fab-actions { display: none; }
+      /* Toast 提示 */
+      #toast-msg {
+        position: fixed;
+        bottom: 50px;
+        left: 50%;
+        transform: translateX(-50%) translateY(20px);
+        background: var(--text-deep);
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 6px;
+        font-size: 13px;
+        opacity: 0;
+        visibility: hidden;
+        transition: 0.3s;
+        z-index: 2000;
+      }
+      #toast-msg.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(0);
+      }
+      /* 边缘感应（原版，用于双击唤醒 FAB） */
+      .edge-sensor {
+        position: fixed;
+        z-index: 1500;
+        background: transparent;
+      }
+      .edge-sensor.top { top: 0; left: 0; width: 100%; height: 30px; }
+      .edge-sensor.bottom { bottom: 0; left: 0; width: 100%; height: 30px; }
+      .edge-sensor.left { top: 30px; bottom: 30px; left: 0; width: 15px; }
+      .edge-sensor.right { top: 30px; bottom: 30px; right: 0; width: 15px; }
+    </style>
+  </head>
+  <body>
+    <div id="phone-screen">
+      <!-- 原版主屏幕 -->
+      <div id="home-screen" class="screen">
+        <div id="home-screen-pages-container">
+          <div id="home-screen-pages">
+            <div class="home-screen-page">
+              <div id="main-content-area">
+                <div id="desktop-layout">
+                  <div id="desktop-app-container">
+                    <!-- 原版螺丝和装饰 -->
+                    <div class="screw tl"></div>
+                    <div class="screw tr"></div>
+                    <div class="screw bl"></div>
+                    <div class="screw br"></div>
+                    <div class="tape-bottom-deco">
+                      <div class="tape-holes"></div>
+                    </div>
+                    <div class="tape-window-bg"></div>
+                    <!-- 左卷轴：330 -->
+                    <div class="desktop-app-icon" onclick="openApp('app-a')">
+                      <div class="icon-bg-desktop">
+                        <img src="https://s3plus.meituan.net/opapisdk/op_ticket_885190757_1756312261242_qdqqd_g0eriz.jpeg" alt="330" />
+                      </div>
+                      <span class="label">330</span>
+                    </div>
+                    <!-- 中卷轴：兔K -->
+                    <div class="desktop-app-icon" onclick="openApp('app-b')">
+                      <div class="icon-bg-desktop">
+                        <img src="https://i.postimg.cc/Kj8JnRcp/267611-CC01-F8-A3-B4910-A2-C2-FFDE479-DC.jpg" alt="兔K" />
+                      </div>
+                      <span class="label">兔K</span>
+                    </div>
+                    <!-- 右卷轴：章鱼机（新加，格式完全一致） -->
+                    <div class="desktop-app-icon" onclick="openApp('app-c')">
+                      <div class="icon-bg-desktop">
+                        <img src="https://raw.githubusercontent.com/vauid/bbbbUwU/main/icon.png" alt="章鱼机" /> <!-- 章鱼图标 -->
+                      </div>
+                      <span class="label">章鱼</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 原版 app-a: 330 -->
+      <div id="app-a" class="app-window app-frame">
+        <iframe data-src="https://kittykitty0v0.github.io/sfsfdf/" src="" class="app-iframe"></iframe>
+      </div>
+      <!-- 原版 app-b: 兔K -->
+      <div id="app-b" class="app-window app-frame">
+        <iframe data-src="https://kittykitty0v0.github.io/-k-/" src="" class="app-iframe"></iframe>
+      </div>
+      <!-- 新 app-c: 章鱼机 -->
+      <div id="app-c" class="app-window app-frame">
+        <iframe data-src="https://vauid.github.io/bbbbUwU/" src="" class="app-iframe"></iframe>
+      </div>
+      <!-- 原版 FAB 菜单 -->
+      <div id="fab-container">
+        <div class="fab-actions">
+          <div class="fab-action-btn" onclick="openApp('app-a')">
+            <span class="fab-label">330</span>
+            <div class="fab-mini-btn">
+              <img src="https://s3plus.meituan.net/opapisdk/op_ticket_885190757_1756312261242_qdqqd_g0eriz.jpeg" alt="330" />
+            </div>
+          </div>
+          <div class="fab-action-btn" onclick="openApp('app-b')">
+            <span class="fab-label">兔K</span>
+            <div class="fab-mini-btn">
+              <img src="https://i.postimg.cc/Kj8JnRcp/267611-CC01-F8-A3-B4910-A2-C2-FFDE479-DC.jpg" alt="兔K" />
+            </div>
+          </div>
+          <div class="fab-action-btn" onclick="openApp('app-c')">
+            <span class="fab-label">章鱼机</span>
+            <div class="fab-mini-btn">
+              <img src="https://raw.githubusercontent.com/vauid/bbbbUwU/main/icon.png" alt="章鱼机" />
+            </div>
+          </div>
+          <div class="fab-action-btn" onclick="hideFab()">
+            <span class="fab-label">隐藏</span>
+            <div class="fab-mini-btn">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46A11.804 11.804 0 0 0 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/>
+              </svg>
+            </div>
+          </div>
+          <div class="fab-action-btn" onclick="goHome()">
+            <span class="fab-label">主页</span>
+            <div class="fab-mini-btn">
+              <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" /></svg>
+            </div>
+          </div>
+        </div>
+        <div id="fab-main"></div>
+      </div>
+      <!-- 原版边缘感应 -->
+      <div class="edge-sensor top"></div>
+      <div class="edge-sensor bottom"></div>
+      <div class="edge-sensor left"></div>
+      <div class="edge-sensor right"></div>
+      <div id="toast-msg"></div>
+    </div>
+    <script>
+      /* 原版 JS 逻辑（从 TUKI330 复制） */
+      const fabContainer = document.getElementById('fab-container');
+      const fabMain = document.getElementById('fab-main');
+      const launcherScreen = document.getElementById('home-screen');
+      const frames = document.querySelectorAll('.app-frame');
+      const toastMsg = document.getElementById('toast-msg');
+      const menuIconSvg = '<svg viewBox="0 0 24 24"><path d="M4 18h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zm0-5h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zM3 7c0 .55.45 1 1 1h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1z"/></svg>';
+      const closeIconSvg = '<svg viewBox="0 0 24 24"><path d="M18.3 5.71a.996.996 0 0 0-1.41 0L12 10.59 7.11 5.7a.996.996 0 1 0-1.41 1.41L10.59 12 5.7 16.89a.996.996 0 1 0 1.41 1.41L12 13.41l4.89 4.89a.996.996 0 1 0 1.41-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z"/></svg>';
+      fabMain.innerHTML = menuIconSvg;
+      function openApp(frameId) {
+        document.body.classList.add('app-open');
+        launcherScreen.style.opacity = '0';
+        launcherScreen.style.transform = 'scale(0.95)';
+        frames.forEach(frame => {
+          if (frame.id === frameId) {
+            frame.style.display = 'flex';
+            setTimeout(() => frame.classList.add('active'), 10);
+            const iframe = frame.querySelector('iframe');
+            if (iframe && iframe.dataset.src) {
+              iframe.src = iframe.dataset.src;
+            }
+          } else {
+            frame.classList.remove('active');
+            frame.style.display = 'none';
+            const iframe = frame.querySelector('iframe');
+            if (iframe) iframe.src = '';
+          }
+        });
+        closeMenu();
+      }
+      function goHome() {
+        document.body.classList.remove('app-open');
+        launcherScreen.style.opacity = '1';
+        launcherScreen.style.transform = 'scale(1)';
+        setTimeout(() => {
+          frames.forEach(frame => {
+            frame.classList.remove('active');
+            frame.style.display = 'none';
+            const iframe = frame.querySelector('iframe');
+            if (iframe) iframe.src = '';
+          });
+        }, 300);
+        closeMenu();
+      }
+      function hideFab() {
+        closeMenu();
+        const mainRect = fabMain.getBoundingClientRect();
+        fabContainer.style.left = mainRect.left + 'px';
+        fabContainer.style.top = mainRect.top + 'px';
+        fabContainer.style.bottom = 'auto';
+        fabContainer.style.right = 'auto';
+        fabContainer.classList.add('ghost-mode');
+        showToast('已隐藏。双击屏幕顶部或底部唤出。');
+      }
+      function showFab() {
+        fabContainer.classList.remove('ghost-mode');
+      }
+      function showToast(text) {
+        toastMsg.innerText = text;
+        toastMsg.classList.add('show');
+        setTimeout(() => toastMsg.classList.remove('show'), 3000);
+      }
+      function toggleMenu() {
+        if (fabContainer.classList.contains('ghost-mode')) {
+          showFab();
+          setTimeout(() => {
+            fabContainer.classList.add('menu-open');
+            fabMain.classList.add('expanded');
+            fabMain.innerHTML = closeIconSvg;
+          }, 50);
+          return;
+        }
+        fabContainer.classList.toggle('menu-open');
+        fabMain.classList.toggle('expanded');
+        if (fabMain.classList.contains('expanded')) {
+          fabMain.innerHTML = closeIconSvg;
+        } else {
+          fabMain.innerHTML = menuIconSvg;
+        }
+      }
+      function closeMenu() {
+        fabContainer.classList.remove('menu-open');
+        fabMain.classList.remove('expanded');
+        fabMain.innerHTML = menuIconSvg;
+      }
+      document.addEventListener('click', e => {
+        if (!fabContainer.contains(e.target) && fabContainer.classList.contains('menu-open')) {
+          closeMenu();
+        }
+      });
+      /* 原版拖拽（略，完整版可加） */
+      let isDragging = false;
+      let hasMoved = false;
+      let startX, startY, initialLeft, initialTop;
+      const dragThreshold = 5;
+      fabMain.addEventListener('mousedown', startDrag);
+      fabMain.addEventListener('touchstart', startDrag, { passive: false });
+      function startDrag(e) {
+        if (fabContainer.classList.contains('ghost-mode')) return;
+        if (fabContainer.classList.contains('menu-open')) closeMenu();
+        isDragging = true;
+        hasMoved = false;
+        if (e.type === 'touchstart') {
+          startX = e.touches[0].clientX;
+          startY = e.touches[0].clientY;
+        } else {
+          startX = e.clientX;
+          startY = e.clientY;
+        }
+        const rect = fabContainer.getBoundingClientRect();
+        initialLeft = rect.left;
+        initialTop = rect.top;
+        fabContainer.style.bottom = 'auto';
+        fabContainer.style.right = 'auto';
+        fabContainer.style.left = initialLeft + 'px';
+        fabContainer.style.top = initialTop + 'px';
+        document.addEventListener('mousemove', onDrag);
+        document.addEventListener('touchmove', onDrag, { passive: false });
+        document.addEventListener('mouseup', stopDrag);
+        document.addEventListener('touchend', stopDrag);
+      }
+      function onDrag(e) {
+        if (!isDragging) return;
+        e.preventDefault();
+        let clientX, clientY;
+        if (e.type === 'touchmove') {
+          clientX = e.touches[0].clientX;
+          clientY = e.touches[0].clientY;
+        } else {
+          clientX = e.clientX;
+          clientY = e.clientY;
+        }
+        const deltaX = clientX - startX;
+        const deltaY = clientY - startY;
+        if (Math.abs(deltaX) > dragThreshold || Math.abs(deltaY) > dragThreshold) hasMoved = true;
+        fabContainer.style.left = initialLeft + deltaX + 'px';
+        fabContainer.style.top = initialTop + deltaY + 'px';
+      }
+      function stopDrag() {
+        isDragging = false;
+        document.removeEventListener('mousemove', onDrag);
+        document.removeEventListener('touchmove', onDrag);
+        document.removeEventListener('mouseup', stopDrag);
+        document.removeEventListener('touchend', stopDrag);
+      }
+      fabMain.addEventListener('click', e => {
+        e.stopPropagation();
+        if (!hasMoved) toggleMenu();
+      });
+      /* 双击唤醒 FAB */
+      let lastTapTime = 0;
+      document.addEventListener('dblclick', () => {
+        if (fabContainer.classList.contains('ghost-mode')) {
+          showFab();
+          showToast('已唤出菜单');
+        }
+      });
+      document.addEventListener('touchend', e => {
+        const currentTime = new Date().getTime();
+        const tapLength = currentTime - lastTapTime;
+        if (tapLength < 300 && tapLength > 0) {
+          if (fabContainer.classList.contains('ghost-mode')) {
+            showFab();
+            showToast('已唤出菜单');
+            e.preventDefault();
+          }
+        }
+        lastTapTime = currentTime;
+      });
+      /* SW 注册（原版） */
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('https://kittykitty0v0.github.io/TUKI330/sw.js');
+        });
+      }
+      /* 数据同步（简单 IndexedDB 共享，聊天/世界书三边互通） */
+      class SharedDataSync {
+        constructor() {
+          this.dbName = 'TQephoneSharedDB';
+          this.dbVersion = 1;
+          this.initDB();
+        }
+        initDB() {
+          const request = indexedDB.open(this.dbName, this.dbVersion);
+          request.onsuccess = () => {
+            this.db = request.result;
+            this.syncToAllIframes();
+          };
+          request.onupgradeneeded = (e) => {
+            const db = e.target.result;
+            if (!db.objectStoreNames.contains('chatHistory')) {
+              db.createObjectStore('chatHistory', { keyPath: 'id', autoIncrement: true });
+            }
+            if (!db.objectStoreNames.contains('worldBook')) {
+              db.createObjectStore('worldBook', { keyPath: 'id', autoIncrement: true });
+            }
+          };
+        }
+        saveChat(message) {
+          const tx = this.db.transaction(['chatHistory'], 'readwrite');
+          tx.objectStore('chatHistory').add({ content: message, timestamp: Date.now() });
+          this.broadcastToIframes('chatUpdate', message);
+        }
+        saveWorldBook(entry) {
+          const tx = this.db.transaction(['worldBook'], 'readwrite');
+          tx.objectStore('worldBook').add({ ...entry, timestamp: Date.now() });
+          this.broadcastToIframes('worldUpdate', entry);
+        }
+        broadcastToIframes(event, data) {
+          document.querySelectorAll('.app-iframe').forEach(iframe => {
+            try {
+              iframe.contentWindow.postMessage({ type: event, data }, '*');
+            } catch (e) { console.warn('广播失败'); }
+          });
+        }
+        syncToAllIframes() {
+          const txChat = this.db.transaction(['chatHistory'], 'readonly');
+          txChat.objectStore('chatHistory').getAll().onsuccess = (e) => this.broadcastToIframes('loadChat', e.target.result);
+          const txWorld = this.db.transaction(['worldBook'], 'readonly');
+          txWorld.objectStore('worldBook').getAll().onsuccess = (e) => this.broadcastToIframes('loadWorld', e.target.result);
+        }
+      }
+      const dataSync = new SharedDataSync();
+      window.addEventListener('message', (e) => {
+        if (e.data.type === 'chatSave') dataSync.saveChat(e.data.data);
+        if (e.data.type === 'worldSave') dataSync.saveWorldBook(e.data.data);
+      });
+    </script>
+  </body>
 </html>
