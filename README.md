@@ -1,2 +1,2 @@
 # TQephone
-For privacte use only
+For private use only
