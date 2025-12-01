@@ -1,48 +1,41 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>TQephone 三合一</title>
-    
-    <!-- 用 TUKI330 原版 manifest，保证能正常安装到桌面 -->
-    <link rel="manifest" href="https://kittykitty0v0.github.io/TUKI330/manifest.json">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#f0f2f5">
-    <link rel="apple-touch-icon" href="https://i.postimg.cc/Fz25WLbr/7D99384EE38C42D2BA98F53E4582FEA8.jpg">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>TQephone 三合一</title>
 
-    <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        body,html{height:100%;overflow:hidden;background:#fdfbf7;font-family:'Courier New',monospace}
-        iframe{width:100%;height:calc(100% - 90px);border:none;display:block}
-        .bar{position:fixed;bottom:0;left:0;width:100%;height:90px;background:rgba(255,253,240,0.96);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:space-around;z-index:9999;box-shadow:0 -5px 20px rgba(0,0,0,0.1)}
-        .item{text-align:center;color:#5d4037;font-weight:bold;font-size:14px}
-        .item img{width:52px;height:52px;border-radius:50%;object-fit:cover;border:3px solid #e6ceac;box-shadow:0 4px 10px rgba(0,0,0,0.2)}
-        .item div{margin-top:6px}
-    </style>
+  <!-- 直接用原作者的 manifest，完美安装、无底栏、图标正确 -->
+  <link rel="manifest" href="https://kittykitty0v0.github.io/TUKI330/manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#f0f2f5">
+
+  <style>
+    body,html{margin:0;padding:0;height:100%;overflow:hidden;background:#fdfbf7}
+    iframe{width:100%;height:100%;border:none}
+  </style>
 </head>
 <body>
 
-    <iframe id="frame" src="https://kittykitty0v0.github.io/TUKI330/"></iframe>
+  <!-- 默认显示原版磁带机（已经自带 330 + 兔K）-->
+  <iframe src="https://kittykitty0v0.github.io/TUKI330/"></iframe>
 
-    <div class="bar">
-        <div class="item" onclick="document.getElementById('frame').src='https://kittykitty0v0.github.io/TUKI330/'">
-            <img src="https://s3plus.meituan.net/opapisdk/op_ticket_885190757_1756312261242_qdqqd_g0eriz.jpeg">
-            <div>330+兔K</div>
-        </div>
-
-        <div class="item" onclick="document.getElementById('frame').src='https://vauid.github.io/bbbbUwU/'">
-            <img src="https://raw.githubusercontent.com/vauid/bbbbUwU/main/icon.png">
-            <div>章鱼机</div>
-        </div>
-
-        <div class="item" onclick="location.reload()">
-            <img src="https://i.postimg.cc/Fz25WLbr/7D99384EE38C42D2BA98F53E4582FEA8.jpg">
-            <div>刷新</div>
-        </div>
-    </div>
+  <!-- 偷偷加一个章鱼机入口：点第三个磁带卷轴（右边那个）就进章鱼机 -->
+  <script>
+    // 监听所有点击事件
+    document.addEventListener('click', function(e) {
+      // 如果点击区域在右边 30% 的屏幕（就是右边那个磁带卷轴的位置）
+      if (e.clientX > window.innerWidth * 0.7) {
+        document.querySelector('iframe').src = 'https://vauid.github.io/bbbbUwU/';
+      }
+      // 如果点击区域在左边 30%（左边卷轴），就切回原版
+      else if (e.clientX < window.innerWidth * 0.3) {
+        document.querySelector('iframe').src = 'https://kittykitty0v0.github.io/TUKI330/';
+      }
+    });
+  </script>
 
 </body>
 </html>
